@@ -10,12 +10,7 @@ class TrackingWheel {
         float diameter;
         float distance;
         float rpm;
-        enum class Type
-        {
-            Motors,
-            Rotation,
-            ADI
-        };
+        
         float gearRatio = 1;
 
     public:

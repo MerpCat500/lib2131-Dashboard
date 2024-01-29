@@ -1,24 +1,30 @@
 #pragma once
+#include "essentials/util.hpp"
 
 namespace essentials {
 class Pose {
     public:
         float x;
         float y;
-        float theta;
 
-        Pose(float x, float y, float theta);
+        float theta;
+        bool degrees;
+
+        Pose(float x, float y, float theta, bool degrees = true);
         
         // Addition / Subtraction
-        Pose operator+(const Pose& pose2);
-        Pose operator-(const Pose& pose2);
+        Pose operator+(Pose& pose2);
+        Pose operator-(Pose& pose2);
 
         // Scale
-        Pose operator*(const float scalar);
-        Pose operator/(const float& other);
+        Pose operator*(float scalar);
         
         // Distance / Angle to Pose
         float distance(Pose other);
         float angle(Pose other);
+
+        // Angles
+        float getDeg();
+        float getRad();
 };
 } // namespace essentials

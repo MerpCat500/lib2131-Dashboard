@@ -8,7 +8,6 @@ class PID {
     private:
         // Tuning Values
         float kF;
-        float kA;
         float kP;
         float kI;
         float kD;
@@ -30,9 +29,9 @@ class PID {
         float prevOutput = 0;
         
     public:       
-        PID(float kF, float kA, float kP, float kI, float kD);
+        PID(float kF, float kP, float kI, float kD);
 
-        void setGains(float kF, float kA, float kP, float kI, float kD);
+        void setGains(float kF, float kP, float kI, float kD);
         void setExit(float largeError, float smallError, int largeTime, int smallTime, int maxTime);
         
         float update(float target, float actual);

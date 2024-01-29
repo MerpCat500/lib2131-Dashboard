@@ -14,13 +14,10 @@ class Chassis {
         Chassis();
         
         void calibrate();
-        
         void setPose();
         
         Pose getPose();
-        
         void turnTo();
-        
         void moveTo();
         
 };
