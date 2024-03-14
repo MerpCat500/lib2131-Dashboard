@@ -1,42 +1,48 @@
 #pragma once
 #include <string>
-#include "pros/rtos.hpp"
 
-namespace essentials {
+#include "essentials/util.hpp"
 
-class PID {
-    private:
-        // Tuning Values
-        float kF;
-        float kP;
-        float kI;
-        float kD;
+namespace essentials
+{
 
-        // Exit Conditions
-        float largeError;
-        float smallError;
-        int largeTime = 0;
-        int smallTime = 0;
-        int maxTime = -1; // -1 means no max time set, run forever
-
-        int largeTimeCounter = 0;
-        int smallTimeCounter = 0;
-        int startTime = 0;
-
-        // Error
-        float prevError = 0;
-        float totalError = 0;
-        float prevOutput = 0;
-        
-    public:       
-        PID(float kF, float kP, float kI, float kD);
-
-        void setGains(float kF, float kP, float kI, float kD);
-        void setExit(float largeError, float smallError, int largeTime, int smallTime, int maxTime);
-        
-        float update(float target, float actual);
-        void reset();
-        bool settled();
-
+struct PID_exitParam
+{
+  float largeError;
+  float smallError;
+  int largeTime;
+  int smallTime;
 };
-} // namespace essentials
+
+class PID
+{
+ private:
+  // Tuning Values
+  float kP;
+  float kI;
+  float kD;
+
+  // Type
+  bool velocity;
+
+  // Exit Conditions
+  timer ErrorTimer;
+  PID_exitParam exitConditions;
+  bool settled;
+
+  // Error
+  float prevError;
+  float prevOutput;
+
+ public:
+  PID(float kP, float kI, float kD, bool velocity);
+  ~PID();
+
+  void setGains(float kP, float kI, float kD);
+  void setExit(PID_exitParam Exits);
+
+  float calculate(float target, float actual, float dT);
+  void reset();
+  bool settled();
+};
+}  // namespace essentials
