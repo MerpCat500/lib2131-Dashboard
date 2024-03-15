@@ -81,8 +81,12 @@ void autonomous() { std::cout << "Start of Auton" << std::endl; }
 void opcontrol()
 {
   std::cout << "Start of Driver" << std::endl;
-  lib2131::trackingWheel TW(&rightDrive, 2.75, 5.5, 450);
+  lib2131::trackingWheel TW(&rightDrive, 2.75, 11, 450);
+  lib2131::trackingWheel TW2(&leftDrive, lib2131::WheelTypes::Small_Omni, 11,
+                             450);
   TW.reset();
+  TW2.reset();
+
   while (1)
   {
     pros::delay(10);

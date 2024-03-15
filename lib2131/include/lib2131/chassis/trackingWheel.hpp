@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iostream>
 
 #include "pros/adi.hpp"
 #include "pros/motors.hpp"
@@ -6,6 +7,22 @@
 
 namespace lib2131
 {
+/**
+ * Different Types of Wheels
+ * (In Inches)
+ * Tiny: 2.00
+ * Small: 2.75
+ * Medium: 3.25
+ * Large: 4.00
+ */
+namespace WheelTypes
+{
+constexpr double Tiny_Omni = 2.00;
+constexpr double Small_Omni = 2.75;
+constexpr double Med_Omni = 3.25;
+constexpr double Large_Omni = 4.00;
+}  // namespace WheelTypes
+
 class trackingWheel
 {
  private:
@@ -22,135 +39,70 @@ class trackingWheel
   double _d_Dist_Traveled = 0;
 
  public:
+  /**
+   * Constructor for a Tracking Wheel using a ADI (Triport) Encoder
+   *
+   * @param  pros::ADIEncoder* Encoder : Pointer to sensor
+   * @param  double WheelSize          : Diameter of the wheel
+   * @param  double Offset             : Offset from tracking center
+   * @param  double Ratio              : Ratio from wheel to sensor
+   */
   trackingWheel(pros::ADIEncoder* Encoder, double WheelSize, double Offset,
-                double Ratio = 1)
-      : _Encoder(Encoder), _WheelSize(WheelSize), _Ratio(Ratio), _Offset(Offset)
-  {
-  }
-
+                double Ratio = 1);
+  /**
+   * Constructor for a Tracking Wheel using a Rotational Sensor
+   *
+   * @param pros::Rotation* Rotational : Pointer to sensor
+   * @param double WheelSize           : Diameter of the Wheel
+   * @param double Offset              : Offset from tracking center
+   * @param double Ratio               : Ratio from wheel to sensor
+   */
   trackingWheel(pros::Rotation* Rotational, double WheelSize, double Offset,
-                double Ratio = 1)
-      : _Rotational(Rotational),
-        _WheelSize(WheelSize),
-        _Ratio(Ratio),
-        _Offset(Offset)
-  {
-  }
-
+                double Ratio = 1);
+  /**
+   * Constructor for a Tracking Wheel using a Motor Group
+   *
+   * @param  pros::Motor_Group* Motor_Group : Pointer to Motor_Group
+   * @param  double WheelSize               : Diameter of the Wheel
+   * @param  double Offset                  : Drive Width
+   * @param  double Ratio                   : Rpm of Drive
+   */
   trackingWheel(pros::Motor_Group* Motor_Group, double WheelSize, double Offset,
-                double Ratio)
-      : _Motor_Group(Motor_Group),
-        _WheelSize(WheelSize),
-        _Ratio(Ratio),
-        _Offset(Offset)
-  {
-  }
+                double Ratio);
+  /**
+   * Set the current Distance that a Tracking wheel has moved
+   * @param  double Distance
+   */
+  void set_Dist(double Distance);
+  /**
+   * Get raw output of sensors in Degrees
+   *
+   * @return double Position: Position of sensor in Degrees
+   */
+  double get_Raw();
+  /**
+   * Get distance the Tracking Wheel has traveled
+   * @return {double}  Distance Traveled:
+   */
+  double get_Dist();
+  /**
+   * Get the Delta of Distance the Tracking Wheel has traveled
+   * @return {double}  Delta Distance Traveled:
+   */
+  double get_d_Dist();
+  /**
+   * Get Offset from the Tracking Center
+   * @return {double}  : Offset Distance
+   */
+  double get_Offset();
 
-  void set_Dist(double Distance) { _Dist_Traveled = Distance; }
-
-  double get_Raw()
-  {
-    if (_Encoder != nullptr)
-    {
-      return _Encoder->get_value();
-    }
-    else if (_Rotational != nullptr)
-    {
-      return _Rotational->get_position() / 100;
-    }
-    else if (_Motor_Group != nullptr)
-    {
-      // get distance traveled by each motor
-      std::vector<pros::motor_gearset_e_t> gearsets =
-          _Motor_Group->get_gearing();
-      std::vector<double> positions = _Motor_Group->get_positions();
-      double total = 0;
-      for (int i = 0; i < _Motor_Group->size(); i++)
-      {
-        int Cart_Type;
-        switch (gearsets[i])
-        {
-          case pros::E_MOTOR_GEARSET_36:
-            Cart_Type = 100;
-            break;
-          case pros::E_MOTOR_GEARSET_18:
-            Cart_Type = 200;
-            break;
-          case pros::E_MOTOR_GEARSET_06:
-            Cart_Type = 600;
-            break;
-          default:
-            Cart_Type = 200;
-            break;
-        }
-
-        total += (positions[i] * (_Ratio / Cart_Type));
-      }
-      return total / _Motor_Group->size();
-    }
-    else
-    {
-      std::cout << "PROBLEM OCcURED" << std::endl;
-      return 0;
-    }
-  }
-  double get_Dist() { return _Dist_Traveled; }
-  double get_d_Dist() { return _d_Dist_Traveled; }
-
-  void update()
-  {
-    // Pick Sensor
-    if (_Encoder != nullptr)
-    {
-      // Calc New Dist Traveled
-      _Dist_Traveled =
-          (_Encoder->get_value() / 360 * _WheelSize * M_PI) / _Ratio;
-      // Calc Change
-      _d_Dist_Traveled = _Dist_Traveled - _last_Dist_Traveled;
-      // Update Last Dist
-      _last_Dist_Traveled = _Dist_Traveled;
-    }
-    else if (_Rotational != nullptr)
-    {
-      std::cout << "ROTATIONAL" << std::endl;
-      // Calc New Dist
-      _Dist_Traveled =
-          (_Rotational->get_position() / 36000 * _WheelSize * M_PI) / _Ratio;
-      // Calc Change
-      _d_Dist_Traveled = _Dist_Traveled - _last_Dist_Traveled;
-      // Update Last Dist
-      _last_Dist_Traveled = _Dist_Traveled;
-    }
-    else if (_Motor_Group != nullptr)
-    {
-      // Calc Dist Traveled
-      _Dist_Traveled = (this->get_Raw() / 360 * _WheelSize * M_PI);
-      // Calc Change
-      _d_Dist_Traveled = _Dist_Traveled - _last_Dist_Traveled;
-      // Update Last Dist
-      _last_Dist_Traveled = _Dist_Traveled;
-    }
-  }
-
-  void reset()
-  {
-    if (_Encoder != nullptr)
-    {
-      _Encoder->reset();
-    }
-    else if (_Rotational != nullptr)
-    {
-      _Rotational->reset_position();
-    }
-    else if (_Motor_Group != nullptr)
-    {
-      _Motor_Group->tare_position();
-      _Motor_Group->set_encoder_units(
-          pros::motor_encoder_units_e::E_MOTOR_ENCODER_DEGREES);
-    }
-
-    _Dist_Traveled = 0;
-    _d_Dist_Traveled = 0;
-  }
+  /**
+   * Update Tracking Wheel
+   */
+  void update();
+  /**
+   * Reset Tracking Wheel
+   */
+  void reset();
 };
 }  // namespace lib2131
