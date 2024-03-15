@@ -1,38 +1,30 @@
 #include "main.h"
 
 // ROBOT TEST CONFIG
-// Drive Motors (Left)
-// pros::Motor leftFrontMtr(18, pros::E_MOTOR_GEARSET_06, false);
-// pros::Motor leftMidMtr(17, pros::E_MOTOR_GEARSET_06, true);
-// pros::Motor leftBtmMtr(16, pros::E_MOTOR_GEARSET_06, true);
+// Left Drive Motors
+pros::Motor leftFrontMtr(20, pros::E_MOTOR_GEARSET_06, true);
+pros::Motor leftMidMtr(18, pros::E_MOTOR_GEARSET_06, true);
+pros::Motor leftBtmMtr(17, pros::E_MOTOR_GEARSET_06, true);
 
-// // Drive Motors (Right)
-// pros::Motor rightFrontMtr(15, pros::E_MOTOR_GEARSET_06, true);
-// pros::Motor rightMidMtr(14, pros::E_MOTOR_GEARSET_06, false);
-// pros::Motor rightBackMtr(13, pros::E_MOTOR_GEARSET_06, false);
+// Right Drive Motors
+pros::Motor rightFrontMtr(13, pros::E_MOTOR_GEARSET_06, false);
+pros::Motor rightMidMtr(11, pros::E_MOTOR_GEARSET_06, false);
+pros::Motor rightBackMtr(12, pros::E_MOTOR_GEARSET_06, false);
 
-// // Motor Groups (Left / Right)
-// pros::Motor_Group leftDrive({leftFrontMtr, leftMidMtr, leftBtmMtr});
-// pros::Motor_Group rightDrive({rightFrontMtr, rightMidMtr, rightBackMtr});
+// Motor Groups (Drive)
+pros::Motor_Group leftDrive({leftFrontMtr, leftMidMtr, leftBtmMtr});
+pros::Motor_Group rightDrive({rightFrontMtr, rightMidMtr, rightBackMtr});
 
-// Tracking Sensors
-pros::Rotation rot1(18, true);
-pros::Rotation rot2(15, false);
-pros::Rotation rot3(21, true);
+// // Tracking Sensors
+// pros::Rotation rot1(18, true);
+// pros::Rotation rot2(15, false);
+// pros::Rotation rot3(21, true);
 
-essentials::TrackingWheel Wheel1(&rot1, 2, -0.5);   // Para1
-essentials::TrackingWheel Wheel2(&rot2, 2, -2.5);   // Perp1 (Mid)
-essentials::TrackingWheel Wheel3(&rot3, 2, -6.25);  // Perp2 (Rear)
+// essentials::TrackingWheel Wheel1(&rot1, 2, -0.5);   // Para1
+// essentials::TrackingWheel Wheel2(&rot2, 2, -2.5);   // Perp1 (Mid)
+// essentials::TrackingWheel Wheel3(&rot3, 2, -6.25);  // Perp2 (Rear)
 
 // pros::IMU inertial(11);
-
-essentials::odom::tracking_sensors essentials::odom::odom_sensors = {
-    &Wheel2,  // Fwd tracking 1
-    &Wheel3,  // Fwd tracking 2
-    &Wheel1,  // Horizontal Track
-    nullptr,  // Vex Inertial Sensor
-    0         // Angle Rotation of wheel
-};
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -40,7 +32,7 @@ essentials::odom::tracking_sensors essentials::odom::odom_sensors = {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() { essentials::odom::init(); }
+void initialize() { pros::lcd::initialize(); }
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -58,7 +50,7 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() { std::cout << "Competition Init" << std::endl; }
 
 /**
  * Runs the user autonomous code. This function will be started in its own
@@ -71,7 +63,7 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start
  * it from where it left off.
  */
-void autonomous() {}
+void autonomous() { std::cout << "Start of Auton" << std::endl; }
 
 /**
  * Runs the operator control code. This function will be started in its own
@@ -88,6 +80,9 @@ void autonomous() {}
  */
 void opcontrol()
 {
+  std::cout << "Start of Driver" << std::endl;
+  lib2131::trackingWheel TW(&rightDrive, 2.75, 5.5, 450);
+  TW.reset();
   while (1)
   {
     pros::delay(10);
