@@ -1,3 +1,4 @@
+#pragma once
 #include <cmath>
 #include <iostream>
 
@@ -95,6 +96,11 @@ class trackingWheel
    * @return {double}  : Offset Distance
    */
   double get_Offset();
+  /**
+   * Returns true if the Tracking wheel isn't a motor
+   * @return {bool}  : Is Dead?
+   */
+  bool get_dead();
 
   /**
    * Update Tracking Wheel

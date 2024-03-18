@@ -3,13 +3,13 @@
 namespace lib2131
 {
 trackingWheel::trackingWheel(pros::ADIEncoder* Encoder, double WheelSize,
-                             double Offset, double Ratio = 1)
+                             double Offset, double Ratio)
     : _Encoder(Encoder), _WheelSize(WheelSize), _Offset(Offset), _Ratio(Ratio)
 {
 }
 
 trackingWheel::trackingWheel(pros::Rotation* Rotational, double WheelSize,
-                             double Offset, double Ratio = 1)
+                             double Offset, double Ratio)
     : _Rotational(Rotational),
       _WheelSize(WheelSize),
       _Offset(Offset),
@@ -21,7 +21,7 @@ trackingWheel::trackingWheel(pros::Motor_Group* Motor_Group, double WheelSize,
                              double Offset, double Ratio)
     : _Motor_Group(Motor_Group),
       _WheelSize(WheelSize),
-      _Offset(Offset / 2),
+      _Offset(Offset),
       _Ratio(Ratio)
 {
 }
@@ -38,8 +38,7 @@ double trackingWheel::get_Raw()
     return _Rotational->get_position() / 100;
   }
   else if (_Motor_Group != nullptr)
-  {
-    // get distance traveled by each motor
+  {  // get distance traveled by each motor
     std::vector<pros::motor_gearset_e_t> gearsets = _Motor_Group->get_gearing();
     std::vector<double> positions = _Motor_Group->get_positions();
     double total = 0;
@@ -75,6 +74,12 @@ double trackingWheel::get_Raw()
 double trackingWheel::get_Dist() { return _Dist_Traveled; }
 double trackingWheel::get_d_Dist() { return _d_Dist_Traveled; }
 double trackingWheel::get_Offset() { return _Offset; }
+
+bool trackingWheel::get_dead()
+{
+  return ((this->_Encoder != nullptr || this->_Rotational != nullptr) &&
+          this->_Motor_Group == nullptr);
+}
 
 void trackingWheel::update()
 {

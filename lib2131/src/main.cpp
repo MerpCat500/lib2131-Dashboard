@@ -24,7 +24,7 @@ pros::Motor_Group rightDrive({rightFrontMtr, rightMidMtr, rightBackMtr});
 // essentials::TrackingWheel Wheel2(&rot2, 2, -2.5);   // Perp1 (Mid)
 // essentials::TrackingWheel Wheel3(&rot3, 2, -6.25);  // Perp2 (Rear)
 
-// pros::IMU inertial(11);
+pros::IMU inertial(16);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -81,14 +81,19 @@ void autonomous() { std::cout << "Start of Auton" << std::endl; }
 void opcontrol()
 {
   std::cout << "Start of Driver" << std::endl;
-  lib2131::trackingWheel TW(&rightDrive, 2.75, 11, 450);
-  lib2131::trackingWheel TW2(&leftDrive, lib2131::WheelTypes::Small_Omni, 11,
-                             450);
+  lib2131::trackingWheel TW(&rightDrive, 2.75, 5.375, 450);
+  lib2131::trackingWheel TW2(&leftDrive, lib2131::WheelTypes::Small_Omni,
+                             -5.375, 450);
+
   TW.reset();
   TW2.reset();
 
+  lib2131::odom::sensors = {&TW, &TW2, nullptr, nullptr};
+  lib2131::odom::init();
+
   while (1)
   {
+    std::cout << lib2131::odom::get_pose() << std::endl;
     pros::delay(10);
   }
 }
