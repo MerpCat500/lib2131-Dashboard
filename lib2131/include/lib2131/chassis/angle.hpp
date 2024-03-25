@@ -23,6 +23,8 @@ class angle
   angle subtractEqual(angle B);
   angle multiplyEqual(double B);
 
+  angle wrapped();
+
   angle operator+(angle B);
   angle operator-(angle B);
   angle operator*(double B);

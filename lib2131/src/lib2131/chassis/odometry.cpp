@@ -130,13 +130,14 @@ void init()
         {
           sensors._Inertial->reset(true);
         }
-        while (1)
+
+                while (1)
         {
           update();
           pros::delay(10);
         }
       },
-      "ODOMETRY THREAD");
+      "ODOMETRY PROCESS");
 }
 
 }  // namespace odom

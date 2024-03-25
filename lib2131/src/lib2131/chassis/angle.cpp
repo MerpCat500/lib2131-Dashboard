@@ -45,6 +45,8 @@ angle angle::multiplyEqual(double B)
   return (*this);
 }
 
+angle angle::wrapped() { return angle(std::fmod(this->_degrees, 360), true); }
+
 angle angle::operator+(angle B) { return addition(B); }
 angle angle::operator-(angle B) { return subtract(B); }
 angle angle::operator*(double B) { return multiply(B); }
