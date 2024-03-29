@@ -6,6 +6,28 @@
 
 namespace lib2131
 {
+
+/**
+ * PID EXIT CONDITIONS
+ * @brief Exit Conditions for a PID
+ */
+struct PID_Exit
+{
+  /**
+   * PID_Exit
+   * @param double _small_error : Error that is constituted as small
+   * @param double _small_time : Time within a small error before being settled
+   * @param double _large_error : Error that is constituted as large
+   * @param double _large_time : Time within a large error before being settled
+   */
+
+  double _small_error;
+  double _small_time;
+
+  double _large_error;
+  double _large_time;
+};
+
 /**
  * PID CONTROLS
  * @brief Control Values for a PID
@@ -28,27 +50,6 @@ struct PID_Controls
   PID_Exit Exit_Conditions;
 
   bool isVelocity;
-};
-
-/**
- * PID EXIT CONDITIONS
- * @brief Exit Conditions for a PID
- */
-struct PID_Exit
-{
-  /**
-   * PID_Exit
-   * @param double _small_error : Error that is constituted as small
-   * @param double _small_time : Time within a small error before being settled
-   * @param double _large_error : Error that is constituted as large
-   * @param double _large_time : Time within a large error before being settled
-   */
-
-  double _small_error;
-  double _small_time;
-
-  double _large_error;
-  double _large_time;
 };
 
 /**

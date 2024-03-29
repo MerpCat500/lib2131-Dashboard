@@ -83,6 +83,8 @@ double PID::update(double error)
   {
     _settled = false;  // Isn't Settled
   }
+
+  return Output;
 }
 /**
  * Get Settled
