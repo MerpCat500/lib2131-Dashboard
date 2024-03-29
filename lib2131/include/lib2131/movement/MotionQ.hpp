@@ -15,10 +15,10 @@ enum class motion_priorities_e
 };
 
 bool isMotionRunning();
-bool isMotionQueued();
 
 void clearMotions();
-void exitMotion();
-void queueMotion(motion_priorities_e priority);
+
+int queueMotion(motion_priorities_e priority);
+bool checkID(int ID);
 
 }  // namespace lib2131

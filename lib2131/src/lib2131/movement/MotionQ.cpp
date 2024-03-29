@@ -1,59 +1,39 @@
-#include "MotionQ.hpp"
+#include "lib2131/movement/MotionQ.hpp"
 
 namespace lib2131
 {
 
-bool _active_motion(0);
-bool _queued_motion(0);
+int _active_ID(0);
+bool _motion_running(0);
 
-bool isMotionRunning() { return _active_motion; }
-bool isMotionQueued() { return _queued_motion; }
+bool isMotionRunning() { return _motion_running; }
 
-void clearMotions()
+void clearMotions() { _motion_running = false; }
+
+int queueMotion(motion_priorities_e priority)
 {
-  _active_motion = 0;
-  _queued_motion = 0;
-}
-
-void exitMotion() { _active_motion = false; }
-
-void queueMotion(motion_priorities_e priority)
-{
-  if (priority == motion_priorities_e::lazy)
+  if (priority == motion_priorities_e::lazy && _motion_running)
   {
-    if (_active_motion)
-    {
-      return;
-    }
-    else
-    {
-      _active_motion = true;
-    }
+    return 0;
   }
   else if (priority == motion_priorities_e::normal)
   {
-    if (_active_motion)
+    while (_motion_running)
     {
-      _queued_motion = true;
-      while (_active_motion)
-      {
-        pros::delay(10);
-      }
-      _queued_motion = false;
+      pros::delay(10);
     }
-
-    _active_motion = true;
-  }
-  else if (priority == motion_priorities_e::important)
-  {
-    _active_motion = false;
-    _queued_motion = false;
-    _active_motion = true;
   }
   else
   {
-    std::cout << "MOTION has problem Q-ing. (Check Priority)" << std::endl;
+    std::cout << "PROBLEM: Queue Motion" << std::endl;
   }
+
+  _active_ID++;
+  _motion_running = true;
+
+  return _active_ID;
 }
+
+bool checkID(int ID) { return (ID == _active_ID); }
 
 }  // namespace lib2131
