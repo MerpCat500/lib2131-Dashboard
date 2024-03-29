@@ -56,6 +56,9 @@ class Chassis
   PID _v_PID;  // Lateral PID
   PID _w_PID;  // Angular PID
 
+  trackingWheel SubstituteTW1;
+  trackingWheel SubstituteTW2;
+
   Drivetrain _Drivetrain;  // Drivetrain Details
   /**
    * Chassis
@@ -67,20 +70,25 @@ class Chassis
    */
   Chassis(PID_Controls Linear_PID, PID_Controls Angular_PID,
           Drivetrain drivetrain, odom::_sensors Odom_Sensors)
-      : _v_PID(Linear_PID), _w_PID(Angular_PID), _Drivetrain(drivetrain)
+      : _v_PID(Linear_PID),
+        _w_PID(Angular_PID),
+        _Drivetrain(drivetrain),
+        SubstituteTW1(
+            trackingWheel(_Drivetrain.leftMotors, _Drivetrain.wheelDiameter,
+                          _Drivetrain.trackWidth / 2, _Drivetrain.rpm)),
+        SubstituteTW2(
+            trackingWheel(_Drivetrain.rightMotors, _Drivetrain.wheelDiameter,
+                          _Drivetrain.trackWidth / -2, _Drivetrain.rpm))
+
   {
     if (Odom_Sensors._TW1 == nullptr)
     {
-      Odom_Sensors._TW1 =
-          &trackingWheel(_Drivetrain.leftMotors, _Drivetrain.wheelDiameter,
-                         _Drivetrain.trackWidth / 2, _Drivetrain.rpm);
+      Odom_Sensors._TW1 = &SubstituteTW1;
     }
 
     if (Odom_Sensors._TW2 == nullptr)
     {
-      Odom_Sensors._TW2 =
-          &trackingWheel(_Drivetrain.rightMotors, _Drivetrain.wheelDiameter,
-                         _Drivetrain.trackWidth / -2, _Drivetrain.rpm);
+      Odom_Sensors._TW2 = &SubstituteTW2;
     }
 
     odom::sensors = Odom_Sensors;

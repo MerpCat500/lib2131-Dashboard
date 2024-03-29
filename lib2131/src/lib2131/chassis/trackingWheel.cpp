@@ -2,6 +2,11 @@
 
 namespace lib2131
 {
+trackingWheel::trackingWheel()
+    : _Rotational(nullptr), _WheelSize(0), _Offset(0), _Ratio(0)
+{
+}
+
 trackingWheel::trackingWheel(pros::ADIEncoder* Encoder, double WheelSize,
                              double Offset, double Ratio)
     : _Encoder(Encoder), _WheelSize(WheelSize), _Offset(Offset), _Ratio(Ratio)

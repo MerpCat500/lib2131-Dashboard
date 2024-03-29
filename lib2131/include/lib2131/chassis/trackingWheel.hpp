@@ -41,8 +41,13 @@ class trackingWheel
 
  public:
   /**
-   * Constructor for a Tracking Wheel using a ADI (Triport) Encoder
-   *
+   * EMPTY TRACKING WHEEL
+   * @brief Constructor for a Tracking Wheel using a ADI (Triport) Encoder
+   */
+  trackingWheel();
+  /**
+   * ENCODER TRACKING WHEEL
+   * @brief Constructor for a Tracking Wheel using a ADI (Triport) Encoder
    * @param  pros::ADIEncoder* Encoder : Pointer to sensor
    * @param  double WheelSize          : Diameter of the wheel
    * @param  double Offset             : Offset from tracking center
@@ -51,8 +56,8 @@ class trackingWheel
   trackingWheel(pros::ADIEncoder* Encoder, double WheelSize, double Offset,
                 double Ratio = 1);
   /**
-   * Constructor for a Tracking Wheel using a Rotational Sensor
-   *
+   * ROTATIONAL TRACKING WHEEL
+   * @brief Constructor for a Tracking Wheel using a Rotational Sensor
    * @param pros::Rotation* Rotational : Pointer to sensor
    * @param double WheelSize           : Diameter of the Wheel
    * @param double Offset              : Offset from tracking center
@@ -61,8 +66,8 @@ class trackingWheel
   trackingWheel(pros::Rotation* Rotational, double WheelSize, double Offset,
                 double Ratio = 1);
   /**
-   * Constructor for a Tracking Wheel using a Motor Group
-   *
+   * MOTOR TRACKING WHEEL
+   * @brief Constructor for a Tracking Wheel using a Motor Group
    * @param  pros::Motor_Group* Motor_Group : Pointer to Motor_Group
    * @param  double WheelSize               : Diameter of the Wheel
    * @param  double Offset                  : Drive Width
