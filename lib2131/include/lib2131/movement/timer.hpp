@@ -45,6 +45,8 @@ class timer
   void reset();
 };
 
+int get_global_time();
+
 extern pros::Task timer_thread;  // Thread for all timers
 
 }  // namespace lib2131

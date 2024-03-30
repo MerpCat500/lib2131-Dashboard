@@ -36,6 +36,8 @@ double timer::get_start_time() { return _start_time; }
  */
 void timer::reset() { _start_time = time; }
 
+int get_global_time() { return time; }
+
 /**
  * Under-laying Timer
  * @brief Is a G :D. "Works 24/7".

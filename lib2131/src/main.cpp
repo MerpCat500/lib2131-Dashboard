@@ -93,7 +93,6 @@ void opcontrol()
 
   while (1)
   {
-    std::cout << lib2131::odom::get_pose() << std::endl;
     pros::delay(10);
   }
 }

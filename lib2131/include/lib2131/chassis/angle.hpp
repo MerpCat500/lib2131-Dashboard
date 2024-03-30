@@ -17,7 +17,7 @@ class angle
 {
  private:
   // Angle in rad and deg
-  double _radians, _degrees;
+  double _degrees;
 
  public:
   /**
@@ -125,7 +125,7 @@ class angle
    */
   angle operator*=(double B);
 
-    /**
+  /**
    * COUT OVERLOAD
    * @brief "Print" a angle to terminal
    * @param  ostream os : Output stream to use (Cout, Cerr, etc)
@@ -135,7 +135,7 @@ class angle
   friend std::ostream& operator<<(std::ostream& os, angle const& B)
   {
     // Print <Degrees> + '°, ' + <Radians> + "rad"
-    return os << B._degrees << "°, " << B._radians << "rad";
+    return os << B._degrees << "°, " << B._degrees * M_PI / 180 << "rad";
   }
 };
 }  // namespace lib2131

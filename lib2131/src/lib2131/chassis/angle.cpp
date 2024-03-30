@@ -11,12 +11,10 @@ angle::angle(double value, bool isDegrees)
 {
   if (isDegrees)  // Value is in degrees
   {
-    this->_degrees = value;               // Degrees = value
-    this->_radians = value * M_PI / 180;  // Calculate Radians
+    this->_degrees = value;  // Degrees = value
   }
   else
   {
-    this->_radians = value;               // Radians = value
     this->_degrees = value * 180 / M_PI;  // Calculate Degrees
   }
 }
@@ -31,7 +29,7 @@ double const angle::get_deg() { return _degrees; }
  * @brief Returns Angle Value in Radians
  * @return double : Angle Value in Radians
  */
-double const angle::get_rad() { return _radians; }
+double const angle::get_rad() { return _degrees * M_PI / 180; }
 /**
  * Addition
  * @brief Returns the Sum of two angles
@@ -69,7 +67,6 @@ angle angle::multiply(double B) { return angle(this->_degrees * B, true); }
 angle angle::additionEqual(angle B)
 {
   this->_degrees += B.get_deg();
-  this->_radians += B.get_rad();
   return (*this);  // Return Self
 }
 /**
@@ -81,7 +78,6 @@ angle angle::additionEqual(angle B)
 angle angle::subtractEqual(angle B)
 {
   this->_degrees -= B.get_deg();
-  this->_radians -= B.get_rad();
   return (*this);  // Return Self
 }
 /**
@@ -93,7 +89,6 @@ angle angle::subtractEqual(angle B)
 angle angle::multiplyEqual(double B)
 {
   this->_degrees *= B;
-  this->_radians *= B;
   return (*this);  // Return Self
 }
 /**
