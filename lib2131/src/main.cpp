@@ -2,18 +2,24 @@
 
 // ROBOT TEST CONFIG
 // Left Drive Motors
-pros::Motor leftFrontMtr(20, pros::E_MOTOR_GEARSET_06, true);
-pros::Motor leftMidMtr(18, pros::E_MOTOR_GEARSET_06, true);
-pros::Motor leftBtmMtr(17, pros::E_MOTOR_GEARSET_06, true);
+// pros::Motor leftFrontMtr(20, pros::E_MOTOR_GEARSET_06, true);
+pros::Motor leftMidMtr(18, pros::E_MOTOR_GEAR_GREEN, true);
+// pros::Motor leftBtmMtr(17, pros::E_MOTOR_GEARSET_06, true);
 
 // Right Drive Motors
-pros::Motor rightFrontMtr(13, pros::E_MOTOR_GEARSET_06, false);
-pros::Motor rightMidMtr(11, pros::E_MOTOR_GEARSET_06, false);
-pros::Motor rightBackMtr(12, pros::E_MOTOR_GEARSET_06, false);
+// pros::Motor rightFrontMtr(13, pros::E_MOTOR_GEARSET_06, false);
+pros::Motor rightMidMtr(11, pros::E_MOTOR_GEAR_GREEN, false);
+// pros::Motor rightBackMtr(12, pros::E_MOTOR_GEARSET_06, false);
 
 // Motor Groups (Drive)
-pros::Motor_Group leftDrive({leftFrontMtr, leftMidMtr, leftBtmMtr});
-pros::Motor_Group rightDrive({rightFrontMtr, rightMidMtr, rightBackMtr});
+pros::Motor_Group leftDrive({leftMidMtr});
+pros::Motor_Group rightDrive({rightMidMtr});
+
+lib2131::Drivetrain drivetrain = {&leftDrive, &rightDrive, 10.75, 2.75, 450};
+
+lib2131::Chassis chassis({1, 1, 1, {200, 200, 400, 400}, false},
+                         {1, 0, 1, {200, 200, 400, 400}, false}, drivetrain,
+                         lib2131::odom::sensors);
 
 // // Tracking Sensors
 // pros::Rotation rot1(18, true);
@@ -24,7 +30,7 @@ pros::Motor_Group rightDrive({rightFrontMtr, rightMidMtr, rightBackMtr});
 // essentials::TrackingWheel Wheel2(&rot2, 2, -2.5);   // Perp1 (Mid)
 // essentials::TrackingWheel Wheel3(&rot3, 2, -6.25);  // Perp2 (Rear)
 
-pros::IMU inertial(16);
+// pros::IMU inertial(16);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -81,16 +87,8 @@ void autonomous() { std::cout << "Start of Auton" << std::endl; }
 void opcontrol()
 {
   std::cout << "Start of Driver" << std::endl;
-  lib2131::trackingWheel TW(&rightDrive, 2.75, 5.375, 450);
-  lib2131::trackingWheel TW2(&leftDrive, lib2131::WheelTypes::Small_Omni,
-                             -5.375, 450);
-
-  TW.reset();
-  TW2.reset();
-
-  lib2131::odom::sensors = {&TW, &TW2, nullptr, nullptr};
-  lib2131::odom::init();
-
+  chassis.calibrate();
+  lib2131::logger::init();
   while (1)
   {
     pros::delay(10);

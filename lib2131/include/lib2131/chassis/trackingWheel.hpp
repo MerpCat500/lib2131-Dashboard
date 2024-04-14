@@ -31,9 +31,9 @@ class trackingWheel
   pros::Rotation* _Rotational = nullptr;
   pros::Motor_Group* _Motor_Group = nullptr;
 
-  const double _WheelSize;
-  const double _Ratio;
-  const double _Offset;
+  double _WheelSize;
+  double _Ratio;
+  double _Offset;
 
   double _Dist_Traveled = 0;
   double _last_Dist_Traveled = 0;
@@ -115,5 +115,9 @@ class trackingWheel
    * Reset Tracking Wheel
    */
   void reset();
+
+  void set_info(pros::ADIEncoder* Encoder, pros::Rotation* _Rotational,
+                pros::Motor_Group* Motor_Group, const double _WheelSize,
+                const double _Ratio, const double _Offset);
 };
 }  // namespace lib2131

@@ -10,3 +10,6 @@
 #include "lib2131/movement/MotionQ.hpp"
 #include "lib2131/movement/pid.hpp"
 #include "lib2131/movement/timer.hpp"
+
+// Logger
+#include "lib2131/logger/logger.hpp"

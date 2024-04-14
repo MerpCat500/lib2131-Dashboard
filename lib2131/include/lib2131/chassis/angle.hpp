@@ -135,7 +135,8 @@ class angle
   friend std::ostream& operator<<(std::ostream& os, angle const& B)
   {
     // Print <Degrees> + '°, ' + <Radians> + "rad"
-    return os << B._degrees << "°, " << B._degrees * M_PI / 180 << "rad";
+    return os << fmod(B._degrees, 360) << "°, "
+              << fmod(B._degrees, 360) * M_PI / 180 << "rad";
   }
 };
 }  // namespace lib2131

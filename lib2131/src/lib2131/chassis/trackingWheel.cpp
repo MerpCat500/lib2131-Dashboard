@@ -2,10 +2,8 @@
 
 namespace lib2131
 {
-trackingWheel::trackingWheel()
-    : _Rotational(nullptr), _WheelSize(0), _Offset(0), _Ratio(0)
-{
-}
+
+trackingWheel::trackingWheel() : _WheelSize(0), _Offset(0), _Ratio(0) {}
 
 trackingWheel::trackingWheel(pros::ADIEncoder* Encoder, double WheelSize,
                              double Offset, double Ratio)
@@ -55,7 +53,7 @@ double trackingWheel::get_Raw()
         case pros::E_MOTOR_GEARSET_36:
           Cart_Type = 100;
           break;
-        case pros::E_MOTOR_GEARSET_18:
+        case pros::E_MOTOR_GEARSET_18 || pros::E_MOTOR_GEAR_GREEN:
           Cart_Type = 200;
           break;
         case pros::E_MOTOR_GEARSET_06:
@@ -72,7 +70,7 @@ double trackingWheel::get_Raw()
   }
   else
   {
-    std::cout << "PROBLEM W/ Tracking wheels" << std::endl;
+    std::cout << "PROBLEM W/ Tracking wheels, " << _Motor_Group << std::endl;
     return 0;
   }
 }
@@ -138,4 +136,18 @@ void trackingWheel::reset()
   _Dist_Traveled = 0;
   _d_Dist_Traveled = 0;
 }
+
+void trackingWheel::set_info(pros::ADIEncoder* Encoder,
+                             pros::Rotation* Rotational,
+                             pros::Motor_Group* Motor_Group, double WheelSize,
+                             double Ratio, double Offset)
+{
+  _Encoder = Encoder;
+  _Rotational = Rotational;
+  _Motor_Group = Motor_Group;
+  _WheelSize = WheelSize;
+  _Ratio = Ratio;
+  _Offset = Offset;
+}
+
 }  // namespace lib2131

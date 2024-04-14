@@ -90,9 +90,9 @@ void update()
   }
   else if (sensors._TW1 != nullptr && sensors._TW2 != nullptr)
   {
-    _d_heading = angle((_TW1_delta - _TW2_delta) / (sensors._TW1->get_Offset() -
-                                                    sensors._TW2->get_Offset()),
-                       false);
+    _d_heading =
+        angle((_TW1_delta - _TW2_delta) / (_TW1_offset - _TW2_offset), false);
+
     heading += _d_heading;
   }
   _IMU_last = heading;
@@ -109,7 +109,9 @@ void update()
     _d_local_X = 2 * sin(_d_heading.get_rad() * 0.5) *
                  (_TW3_delta / _d_heading.get_rad() + _TW3_offset);
     _d_local_Y = -2 * sin(_d_heading.get_rad() * 0.5) *
-                 (_TW1_delta / _d_heading.get_rad() + _TW3_offset);
+                 (_TW1_delta / _d_heading.get_rad() + _TW1_offset);
+    // std::cout << _d_local_X << ", " << _d_local_Y << ", " << heading
+    //           << std::endl;
   }
 
   _d_global_XY = pose(_d_local_Y * sin(avgHeading.get_rad()) +
@@ -131,8 +133,10 @@ void init()
           sensors._Inertial->reset(true);
         }
 
-                while (1)
+        while (1)
         {
+          // std::cout << sensors._TW1->get_Dist() << ", "
+          //           << sensors._TW2->get_Dist() << std::endl;
           update();
           pros::delay(10);
         }
