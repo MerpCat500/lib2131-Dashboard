@@ -77,6 +77,7 @@ class Field(QWidget):
         if self.Graph.sceneBoundingRect().contains(pos): # If within Field
             self.cursor_pos = self.Graph.getPlotItem().vb.mapSceneToView(pos).toPoint() # Convert to a point (int)
 
+    # Planning to call this every time the Client gets new info, That way it only runs as fast as the robot is.
     def refresh(self) -> None:
 
         # Robot pos/speed (Random For testing)
