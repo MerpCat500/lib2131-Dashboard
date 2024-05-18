@@ -39,13 +39,13 @@ class Field(QWidget):
         )
 
         # Background image
-        img = Image.open("Vex_Dash2/high stakes.png")
+        img = Image.open("Lib213-Dashboard/high stakes.png")
         img = img.resize((144, 144), Image.BILINEAR)
         np_img = np.array(img)
         self.img = pg.ImageItem(np_img)
         self.Graph.plotItem.vb.addItem(self.img)
 
-        # Ajust Axis, Show Graph
+        # Adjust Axis, Show Graph
         self.Graph.plotItem.showGrid(True, True, 1)
         axis_bottom: pg.AxisItem = self.Graph.plotItem.getAxis("bottom")
         axis_bottom.setTickSpacing(24, 12)
