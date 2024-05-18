@@ -1,9 +1,10 @@
-import sys, random
+import sys, random  
 import numpy as np
 import pyqtgraph as pg
 
 from PIL import Image
 
+# Graphics Stuffs (PYQT6)
 from PyQt6.QtCore import Qt, QSize, QTimer, QPoint
 from PyQt6.QtWidgets import (
     QMainWindow,
@@ -14,8 +15,8 @@ from PyQt6.QtWidgets import (
     QLabel,
 )
 
-
-class Feild(QWidget):
+# A Field that can be embeded into the main window
+class Field(QWidget):
     def __init__(self) -> None:
         super().__init__()
 
@@ -29,8 +30,10 @@ class Feild(QWidget):
 
         self.Graph.plotItem.vb.disableAutoRange()
         self.Graph.plotItem.vb.setMouseEnabled(False, False)
-        self.Graph.plotItem.hideButtons()
+        self.Graph.plotItem.hideButtons() 
         self.Graph.plotItem.setTitle("Robot Position")
+        
+        # Setup Callback/Signal for mouse position
         self.Proxy = pg.SignalProxy(
             self.Graph.scene().sigMouseMoved, rateLimit=60, slot=self.mouseMoved
         )
@@ -68,18 +71,24 @@ class Feild(QWidget):
         # Force Size
         self.Graph.setFixedSize(QSize(600, 600))
 
+    # When mouse is moved while above the Graph Widget
     def mouseMoved(self, event):
-        pos = event[0]
-        if self.Graph.sceneBoundingRect().contains(pos):
-            self.cursor_pos = self.Graph.getPlotItem().vb.mapSceneToView(pos).toPoint()
+        pos = event[0] # Current mouse Pos
+        if self.Graph.sceneBoundingRect().contains(pos): # If within Field
+            self.cursor_pos = self.Graph.getPlotItem().vb.mapSceneToView(pos).toPoint() # Convert to a point (int)
 
     def refresh(self) -> None:
 
-        self.pos = (self.cursor_pos.x(), self.cursor_pos.y())
+        # Robot pos/speed (Random For testing)
+        self.pos = (self.cursor_pos.x(), self.cursor_pos.y())    
         self.speed = (random.randint(0, 144), random.randint(0, 144))
 
+        # Clear Graph
         self.Graph.plotItem.clearPlots()
+        
+        # If a Pos exists (ie connected to robot)
         if self.pos is not None:
+            # Graph robot info
             self.Graph.plot(
                 [self.pos[0]],
                 [self.pos[1]],
@@ -88,34 +97,37 @@ class Feild(QWidget):
                 symbolSize=22,
                 symbolBrush=pg.mkBrush("w"),
             )
-        self.Label.setText(
-            f"Current Robot Position: ({self.pos[0]}, {self.pos[1]})\n"
-            f"Current Robot Speed: ({self.speed[0]}, {self.speed[1]})\n"
-            f"Mouse Position: ({self.cursor_pos.x()}, {self.cursor_pos.y()})"
-        )
+            # Display info as text
+            self.Label.setText(
+                f"Current Robot Position: ({self.pos[0]}, {self.pos[1]})\n"
+                f"Current Robot Speed: ({self.speed[0]}, {self.speed[1]})\n"
+                f"Mouse Position: ({self.cursor_pos.x()}, {self.cursor_pos.y()})"
+            )
 
-
+# Starting on QUI for other devices
 class vexDevice(QWidget):
     def __init__(self) -> None:
         super().__init__()
 
-
+# Main Window for user Applications
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
-        self.Feild = Feild()
+        self.Field = Field()
 
     def show_new_window(self, checked):
-        self.w = Feild()
+        self.w = Field()
         self.w.show()
 
     def show(self):
-        self.Feild.show()
+        self.Field.show()
 
-
+# App Instance (Args allow for commands)
 app = QApplication(sys.argv)
 
+# Main Window
 win = MainWindow()
 win.show()
 
+# Main Loop
 app.exec()
